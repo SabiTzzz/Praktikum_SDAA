@@ -11,7 +11,10 @@ void clears() {
     system("cls");
 }
 
+int nextID = 1;
+
 struct merchandise {
+    int id;
     string tipe;
     string nama;
     double harga;
@@ -56,6 +59,8 @@ bool kosong() {
 void push(merchandise *&head) {
     int tipenya;
     merchandise *merchBaru = new merchandise;
+
+    merchBaru->id = nextID++;
 
     cout << "Tipe barang :\n";
     cout << "1. Jersey\n";
@@ -122,6 +127,7 @@ void peek(merchandise *head) {
         cout << "Data masih kosong." << endl;
     } else {
         cout << "\nData teratas" << endl;
+        cout << "ID barang : " << head->id << endl;
         cout << "Tipe barang : " << head->tipe << endl;
         cout << "Nama barang : " << head->nama << endl;
         cout << "Harga barang : Rp." << head->harga << endl;
@@ -131,6 +137,8 @@ void peek(merchandise *head) {
 void enqueue(merchandise *&tail) {
     int tipenya;
     merchandise *merchBaru = new merchandise;
+
+    merchBaru->id = nextID++;
 
     cout << "Tipe barang :\n";
     cout << "1. Jersey\n";
@@ -203,6 +211,7 @@ void tampilkan(merchandise *head) {
         int i = 1;
         while (temp != nullptr) {
             cout << "\nData ke-" << i << endl;
+            cout << "ID barang : " << temp->id << endl;
             cout << "Tipe barang : " << temp->tipe << endl;
             cout << "Nama barang : " << temp->nama << endl;
             cout << "Harga barang : Rp." << temp->harga << endl;
@@ -218,18 +227,20 @@ void ubah(merchandise *head) {
         return;
     }
 
-    string namaBarang;
-    cout << "Masukkan nama barang yang ingin diubah: ";
-    getline(cin, namaBarang);
+    int idBarang;
+    cout << "Masukkan ID barang yang ingin diubah: ";
+    cin >> idBarang;
+    cin.ignore();
 
     merchandise *temp = head;
     bool found = false;
 
     while (temp != nullptr) {
-        if (temp->nama == namaBarang) {
+        if (temp->id == idBarang) {
             found = true;
             int tipenya;
             cout << "Barang ditemukan!" << endl;
+            cout << "ID barang sekarang : " << temp->id << endl;
             cout << "Tipe barang sekarang : " << temp->tipe << endl;
             cout << "Nama barang sekarang : " << temp->nama << endl;
             cout << "Harga barang sekarang : Rp." << temp->harga << endl;
@@ -277,10 +288,9 @@ void ubah(merchandise *head) {
     }
 
     if (!found) {
-        cout << "Barang dengan nama '" << namaBarang << "' tidak ditemukan." << endl;
+        cout << "Barang dengan ID '" << idBarang << "' tidak ditemukan." << endl;
     }
 }
-
 
 void menu() {
     string pilihan;
@@ -346,8 +356,8 @@ void menu() {
 }
 
 int main() {
-    merchandise *first = new merchandise{"Jersey", "JERSEY HOME BORNEO FC", 450000, nullptr};
-    merchandise *second = new merchandise{"Jersey", "JERSEY AWAY BORNEO FC", 450000, nullptr};
+    merchandise *first = new merchandise{nextID++, "Jersey", "JERSEY HOME BORNEO FC", 450000, nullptr};
+    merchandise *second = new merchandise{nextID++, "Jersey", "JERSEY AWAY BORNEO FC", 450000, nullptr};
     first->next = second;
     head = first;
     tail = second;
