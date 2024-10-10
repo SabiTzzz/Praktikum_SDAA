@@ -2,10 +2,10 @@
 #include <conio.h>
 using namespace std;
 
-string user = "Muhammad Arya Fayyadh Razan";
-string pass = "2309106010";
-// string user = "";
-// string pass = "";
+// string user = "Muhammad Arya Fayyadh Razan";
+// string pass = "2309106010";
+string user = "";
+string pass = "";
 
 void clears() {
     system("cls");
@@ -47,6 +47,10 @@ bool login(string *user, string *pass, int coba = 0) {
         }
         return login(user, pass, coba + 1);
     }
+}
+
+bool kosong() {
+    return head == nullptr;
 }
 
 void push(merchandise *&head) {
@@ -99,14 +103,14 @@ void push(merchandise *&head) {
 }
 
 void pop(merchandise *&head) {
-    if (head == nullptr) {
+    if (kosong()) {
         cout << "Data masih kosong." << endl;
         return;
     }
 
     merchandise* temp = head;
     head = head->next;
-    if (head == nullptr) {
+    if (kosong()) {
         tail = nullptr;
     }
     delete temp;
@@ -114,7 +118,7 @@ void pop(merchandise *&head) {
 }
 
 void peek(merchandise *head) {
-    if (head == nullptr) {
+    if (kosong()) {
         cout << "Data masih kosong." << endl;
     } else {
         cout << "\nData teratas" << endl;
@@ -170,21 +174,21 @@ void enqueue(merchandise *&tail) {
         tail->next = merchBaru;
     }
     tail = merchBaru;
-    if (head == nullptr) {
+    if (kosong()) {
         head = tail;
     }
     cout << "Data berhasil ditambahkan" << endl;
 }
 
 void dequeue(merchandise *&head) {
-    if (head == nullptr) {
+    if (kosong()) {
         cout << "Data masih kosong." << endl;
         return;
     }
 
     merchandise* temp = head;
     head = head->next;
-    if (head == nullptr) {
+    if (kosong()) {
         tail = nullptr;
     }
     delete temp;
@@ -192,7 +196,7 @@ void dequeue(merchandise *&head) {
 }
 
 void tampilkan(merchandise *head) {
-    if (head == nullptr) {
+    if (kosong()) {
         cout << "Data masih kosong." << endl;
     } else {
         merchandise* temp = head;
@@ -208,6 +212,76 @@ void tampilkan(merchandise *head) {
     }
 }
 
+void ubah(merchandise *head) {
+    if (kosong()) {
+        cout << "Data masih kosong." << endl;
+        return;
+    }
+
+    string namaBarang;
+    cout << "Masukkan nama barang yang ingin diubah: ";
+    getline(cin, namaBarang);
+
+    merchandise *temp = head;
+    bool found = false;
+
+    while (temp != nullptr) {
+        if (temp->nama == namaBarang) {
+            found = true;
+            int tipenya;
+            cout << "Barang ditemukan!" << endl;
+            cout << "Tipe barang sekarang : " << temp->tipe << endl;
+            cout << "Nama barang sekarang : " << temp->nama << endl;
+            cout << "Harga barang sekarang : Rp." << temp->harga << endl;
+
+            cout << "\nTipe barang baru:\n";
+            cout << "1. Jersey\n";
+            cout << "2. Apparel\n";
+            cout << "3. Aksesoris\n";
+            cout << "Pilih tipe barang (1/2/3): ";
+            cin >> tipenya;
+            cin.ignore();
+
+            switch(tipenya) {
+                case 1:
+                    temp->tipe = "Jersey";
+                    break;
+                case 2:
+                    temp->tipe = "Apparel";
+                    break;
+                case 3:
+                    temp->tipe = "Aksesoris";
+                    break;
+                default:
+                    cout << "(!) Pilihan tidak valid!" << endl;
+                    return;
+            }
+
+            cout << "Nama barang baru: ";
+            getline(cin, temp->nama);
+
+            cout << "Harga barang baru: Rp.";
+            cin >> temp->harga;
+            cin.ignore();
+            if (!cin || temp->harga <= 0) {
+                cout << "(!) Harga barang tidak valid!" << endl;
+                cin.clear();
+                cin.ignore();
+                return;
+            }
+
+            cout << "Data berhasil diubah!" << endl;
+            break;
+        }
+        temp = temp->next;
+    }
+
+    if (!found) {
+        cout << "Barang dengan nama '" << namaBarang << "' tidak ditemukan." << endl;
+    }
+}
+
+
 void menu() {
     string pilihan;
     cout << "\n";
@@ -218,6 +292,7 @@ void menu() {
             << "[4] Enqueue (Tambah data belakang)\n"
             << "[5] Dequeue (Hapus data depan)\n"
             << "[6] Tampilkan data\n"
+            << "[7] Ubah data\n"
             << "[0] Keluar\n"
             << "Pilih menu (1/2/3/4/5/6/0): ";
     cin >> pilihan;
@@ -256,6 +331,11 @@ void menu() {
         cout << "Tekan [Enter] untuk ke menu utama...";
         getline(cin, lanjut);
         clears();
+        menu();
+    } else if (pilihan == "7"){
+        clears();
+        tampilkan(head);
+        ubah(head);
         menu();
     } else if (pilihan == "0") {
         cout << "Terima Kasih & Sampai Jumpa!" << endl;
