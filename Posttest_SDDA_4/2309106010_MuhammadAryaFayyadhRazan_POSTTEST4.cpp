@@ -2,10 +2,10 @@
 #include <conio.h>
 using namespace std;
 
-// string user = "Muhammad Arya Fayyadh Razan";
-// string pass = "2309106010";
-string user = "";
-string pass = "";
+string user = "Muhammad Arya Fayyadh Razan";
+string pass = "2309106010";
+// string user = "";
+// string pass = "";
 
 void clears() {
     system("cls");
