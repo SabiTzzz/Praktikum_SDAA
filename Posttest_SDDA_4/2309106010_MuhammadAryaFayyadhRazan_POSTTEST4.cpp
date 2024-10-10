@@ -117,7 +117,7 @@ void peek(merchandise *head) {
     if (head == nullptr) {
         cout << "Data masih kosong." << endl;
     } else {
-        cout << "\nData teratas (Stack):" << endl;
+        cout << "\nData teratas" << endl;
         cout << "Tipe barang : " << head->tipe << endl;
         cout << "Nama barang : " << head->nama << endl;
         cout << "Harga barang : Rp." << head->harga << endl;
@@ -234,6 +234,11 @@ void menu() {
     } else if (pilihan == "3") {
         clears();
         peek(head);
+        cout << "\n";
+        string lanjut;
+        cout << "Tekan [Enter] untuk ke menu utama...";
+        getline(cin, lanjut);
+        clears();
         menu();
     } else if (pilihan == "4") {
         clears();
