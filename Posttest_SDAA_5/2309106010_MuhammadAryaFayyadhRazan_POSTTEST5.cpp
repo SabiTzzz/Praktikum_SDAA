@@ -1,0 +1,488 @@
+#include <iostream>
+#include <conio.h>
+using namespace std;
+
+// string user = "Muhammad Arya Fayyadh Razan";
+// string pass = "2309106010";
+string user = "";
+string pass = "";
+
+void clears() {
+    system("cls");
+}
+
+int nextID = 1;
+
+struct merchandise {
+    int id;
+    string tipe;
+    string nama;
+    double harga;
+    merchandise *next;
+};
+
+merchandise *head = nullptr, *tail = nullptr;
+
+bool login(string *user, string *pass, int coba = 0) {
+    if (coba == 3) {
+        cout << "(!) Anda telah melewati batas percobaan, program berhenti.";
+        return false;
+    }
+
+    string nama, nim;
+    cout << "[  Menu Login  ]" << endl;
+    cout << "Nama : ";
+    getline(cin, nama);
+    cout << "NIM  : ";
+    getline(cin, nim);
+
+    if (nama == *user && nim == *pass) {
+        cout << "\nLogin berhasil!";
+        cout << "\nHalo, " << nama << "!" << endl;
+        cout << "\n";
+        cout << "=================================" << endl;
+        return true;
+    } else {
+        int percobaan = 2 - coba;
+        cout << "\n(!) Login gagal, Nama atau NIM yang anda masukkan salah." << endl;
+        if (coba != 2) {          
+            cout << "(!) Sisa percobaan anda " << percobaan << " kali lagi.\n" << endl;
+        }
+        return login(user, pass, coba + 1);
+    }
+}
+
+bool kosong() {
+    return head == nullptr;
+}
+
+void push(merchandise *&head) {
+    int tipenya;
+    merchandise *merchBaru = new merchandise;
+
+    merchBaru->id = nextID++;
+
+    cout << "Tipe barang :\n";
+    cout << "1. Jersey\n";
+    cout << "2. Apparel\n";
+    cout << "3. Aksesoris\n";
+    cout << "Pilih tipe barang (1/2/3): ";
+    cin >> tipenya;
+    cin.ignore();
+
+    switch(tipenya) {
+        case 1:
+            merchBaru->tipe = "Jersey";
+            break;
+        case 2:
+            merchBaru->tipe = "Apparel";
+            break;
+        case 3:
+            merchBaru->tipe = "Aksesoris";
+            break;
+        default:
+            cout << "(!) Pilihan tidak valid!" << endl;
+            delete merchBaru;
+            return;
+    }
+
+    cout << "Nama barang : ";
+    getline(cin, merchBaru->nama);
+    cout << "Harga barang : Rp.";
+    cin >> merchBaru->harga;
+    cin.ignore();
+    if (!cin || merchBaru->harga <= 0) {
+        cout << "(!) Harga barang tidak valid!" << endl;
+        delete merchBaru;
+        cin.clear();
+        cin.ignore();
+        return;
+    }
+
+    merchBaru->next = head;
+    head = merchBaru;
+    if (tail == nullptr) {
+        tail = head;
+    }
+    cout << "Data berhasil ditambahkan!" << endl;
+}
+
+void pop(merchandise *&head) {
+    if (kosong()) {
+        cout << "Data masih kosong." << endl;
+        return;
+    }
+
+    merchandise* temp = head;
+    head = head->next;
+    if (kosong()) {
+        tail = nullptr;
+    }
+    delete temp;
+    cout << "Data berhasil dihapus!" << endl;
+}
+
+void peek(merchandise *head) {
+    if (kosong()) {
+        cout << "Data masih kosong." << endl;
+    } else {
+        cout << "\nData teratas" << endl;
+        cout << "ID barang : " << head->id << endl;
+        cout << "Tipe barang : " << head->tipe << endl;
+        cout << "Nama barang : " << head->nama << endl;
+        cout << "Harga barang : Rp." << head->harga << endl;
+    }
+}
+
+void enqueue(merchandise *&tail) {
+    int tipenya;
+    merchandise *merchBaru = new merchandise;
+
+    merchBaru->id = nextID++;
+
+    cout << "Tipe barang :\n";
+    cout << "1. Jersey\n";
+    cout << "2. Apparel\n";
+    cout << "3. Aksesoris\n";
+    cout << "Pilih tipe barang (1/2/3): ";
+    cin >> tipenya;
+    cin.ignore();
+
+    switch(tipenya) {
+        case 1:
+            merchBaru->tipe = "Jersey";
+            break;
+        case 2:
+            merchBaru->tipe = "Apparel";
+            break;
+        case 3:
+            merchBaru->tipe = "Aksesoris";
+            break;
+        default:
+            cout << "(!) Pilihan tidak valid!" << endl;
+            delete merchBaru;
+            return;
+    }
+
+    cout << "Nama barang : ";
+    getline(cin, merchBaru->nama);
+    cout << "Harga barang : Rp.";
+    cin >> merchBaru->harga;
+    cin.ignore();
+    if (!cin || merchBaru->harga <= 0) {
+        cout << "(!) Harga barang tidak valid!" << endl;
+        delete merchBaru;
+        cin.clear();
+        cin.ignore();
+        return;
+    }
+
+    merchBaru->next = nullptr;
+    if (tail != nullptr) {
+        tail->next = merchBaru;
+    }
+    tail = merchBaru;
+    if (kosong()) {
+        head = tail;
+    }
+    cout << "Data berhasil ditambahkan" << endl;
+}
+
+void dequeue(merchandise *&head) {
+    if (kosong()) {
+        cout << "Data masih kosong." << endl;
+        return;
+    }
+
+    merchandise* temp = head;
+    head = head->next;
+    if (kosong()) {
+        tail = nullptr;
+    }
+    delete temp;
+    cout << "Data berhasil dihapus dari Queue (dequeue)!" << endl;
+}
+
+void tampilkan(merchandise *head) {
+    if (kosong()) {
+        cout << "Data masih kosong." << endl;
+    } else {
+        merchandise* temp = head;
+        int i = 1;
+        while (temp != nullptr) {
+            cout << "\nData ke-" << i << endl;
+            cout << "ID barang : " << temp->id << endl;
+            cout << "Tipe barang : " << temp->tipe << endl;
+            cout << "Nama barang : " << temp->nama << endl;
+            cout << "Harga barang : Rp." << temp->harga << endl;
+            i++;
+            temp = temp->next;
+        }
+    }
+}
+
+void ubah(merchandise *head) {
+    if (kosong()) {
+        cout << "Data masih kosong." << endl;
+        return;
+    }
+
+    int idBarang;
+    cout << "Masukkan ID barang yang ingin diubah: ";
+    cin >> idBarang;
+    cin.ignore();
+
+    merchandise *temp = head;
+    bool found = false;
+
+    while (temp != nullptr) {
+        if (temp->id == idBarang) {
+            found = true;
+            int tipenya;
+            cout << "Barang ditemukan!" << endl;
+            cout << "ID barang sekarang : " << temp->id << endl;
+            cout << "Tipe barang sekarang : " << temp->tipe << endl;
+            cout << "Nama barang sekarang : " << temp->nama << endl;
+            cout << "Harga barang sekarang : Rp." << temp->harga << endl;
+
+            cout << "\nTipe barang baru:\n";
+            cout << "1. Jersey\n";
+            cout << "2. Apparel\n";
+            cout << "3. Aksesoris\n";
+            cout << "Pilih tipe barang (1/2/3): ";
+            cin >> tipenya;
+            cin.ignore();
+
+            switch(tipenya) {
+                case 1:
+                    temp->tipe = "Jersey";
+                    break;
+                case 2:
+                    temp->tipe = "Apparel";
+                    break;
+                case 3:
+                    temp->tipe = "Aksesoris";
+                    break;
+                default:
+                    cout << "(!) Pilihan tidak valid!" << endl;
+                    return;
+            }
+
+            cout << "Nama barang baru: ";
+            getline(cin, temp->nama);
+
+            cout << "Harga barang baru: Rp.";
+            cin >> temp->harga;
+            cin.ignore();
+            if (!cin || temp->harga <= 0) {
+                cout << "(!) Harga barang tidak valid!" << endl;
+                cin.clear();
+                cin.ignore();
+                return;
+            }
+
+            cout << "Data berhasil diubah!" << endl;
+            break;
+        }
+        temp = temp->next;
+    }
+
+    if (!found) {
+        cout << "Barang dengan ID '" << idBarang << "' tidak ditemukan." << endl;
+    }
+}
+
+void merge(merchandise *&head, merchandise *left, merchandise *right, bool ascending) {
+    merchandise *temp = nullptr;
+    merchandise *current = nullptr;
+
+    while (left != nullptr && right != nullptr) {
+        if ((ascending && left->nama <= right->nama) || (!ascending && left->nama > right->nama)) {
+            if (temp == nullptr) {
+                temp = left;
+                current = left;
+            } else {
+                current->next = left;
+                current = left;
+            }
+            left = left->next;
+        } else {
+            if (temp == nullptr) {
+                temp = right;
+                current = right;
+            } else {
+                current->next = right;
+                current = right;
+            }
+            right = right->next;
+        }
+    }
+
+    if (left != nullptr) {
+        current->next = left;
+    } else {
+        current->next = right;
+    }
+
+    head = temp;
+}
+
+void mergeSort(merchandise *&head, bool ascending) {
+    if (head == nullptr || head->next == nullptr) {
+        return;
+    }
+
+    merchandise *left = head;
+    merchandise *right = head->next;
+
+    while (right != nullptr && right->next != nullptr) {
+        left = left->next;
+        right = right->next->next;
+    }
+
+    right = left->next;
+    left->next = nullptr;
+    left = head;
+
+    mergeSort(left, ascending);
+    mergeSort(right, ascending);
+    merge(head, left, right, ascending);
+}
+
+void shellsort(merchandise *&head) {
+    if (head == nullptr) {
+        return;
+    }
+
+    int n = 0;
+    merchandise *temp = head;
+    while (temp != nullptr) {
+        n++;
+        temp = temp->next;
+    }
+
+    for (int gap = n / 2; gap > 0; gap /= 2) {
+        for (int i = gap; i < n; i++) {
+            merchandise *current = head;
+            for (int j = 0; j < i; j++) {
+                current = current->next;
+            }
+
+            merchandise *gapNode = head;
+            for (int j = 0; j < (i - gap); j++) {
+                gapNode = gapNode->next;
+            }
+
+            if (current->nama < gapNode->nama) {
+                swap(current->nama, gapNode->nama);
+                swap(current->tipe, gapNode->tipe);
+                swap(current->harga, gapNode->harga);
+            }
+        }
+    }
+}
+
+void sort() {
+    int pilihan;
+    cout << "Sorting nama barang berdasarkan:\n";
+    cout << "1. Ascending\n";
+    cout << "2. Descending\n";
+    cout << "Pilih jenis sorting (1/2): ";
+    cin >> pilihan;
+    cin.ignore();
+    
+    if (pilihan == 1) {
+        shellsort(head);
+    } else if (pilihan == 2) {
+        mergeSort(head, false);
+    } else {
+        cout << "(!) Pilihan tidak valid!" << endl;
+    }
+}
+
+void menu() {
+    string pilihan;
+    cout << "\n";
+    cout << "   Merchandise Borneo FC\n"
+            << "[1] Push (Tambah data depan)\n"
+            << "[2] Pop (Hapus data depan)\n"
+            << "[3] Peek (Lihat data teratas)\n"
+            << "[4] Enqueue (Tambah data belakang)\n"
+            << "[5] Dequeue (Hapus data depan)\n"
+            << "[6] Tampilkan data\n"
+            << "[7] Ubah data\n"
+            << "[8] Sorting data\n"
+            << "[0] Keluar\n"
+            << "Pilih menu (1/2/3/4/5/6/0): ";
+    cin >> pilihan;
+    cin.ignore();
+
+    if (pilihan == "1") {
+        clears();
+        push(head);
+        menu();
+    } else if (pilihan == "2") {
+        clears();
+        pop(head);
+        menu();
+    } else if (pilihan == "3") {
+        clears();
+        peek(head);
+        cout << "\n";
+        string lanjut;
+        cout << "Tekan [Enter] untuk ke menu utama...";
+        getline(cin, lanjut);
+        clears();
+        menu();
+    } else if (pilihan == "4") {
+        clears();
+        enqueue(tail);
+        menu();
+    } else if (pilihan == "5") {
+        clears();
+        dequeue(head);
+        menu();
+    } else if (pilihan == "6") {
+        clears();
+        tampilkan(head);
+        cout << "\n";
+        string lanjut;
+        cout << "Tekan [Enter] untuk ke menu utama...";
+        getline(cin, lanjut);
+        clears();
+        menu();
+    } else if (pilihan == "7"){
+        clears();
+        tampilkan(head);
+        ubah(head);
+        menu();
+    } else if (pilihan == "8") {
+        clears();
+        sort();
+        cout << "Data berhasil diurutkan!" << endl;
+        menu();
+    } else if (pilihan == "0") {
+        cout << "Terima Kasih & Sampai Jumpa!" << endl;
+    } else {
+        cout << "(!) Pilihan tidak valid!" << endl;
+        menu();
+    }
+}
+
+int main() {
+    merchandise *first = new merchandise{nextID++, "Jersey", "JERSEY HOME BORNEO FC", 450000, nullptr};
+    merchandise *second = new merchandise{nextID++, "Jersey", "JERSEY AWAY BORNEO FC", 450000, nullptr};
+    merchandise *third = new merchandise{nextID++, "Apparel", "MANYALA COACH JACKET", 350000, nullptr};
+
+    first->next = second;
+    second->next = third;
+    head = first;
+    tail = third;
+
+    clears();
+    if (login(&user, &pass)) {
+        menu();
+    }
+
+    return 0;
+}
